@@ -19,8 +19,12 @@ public class Part1{
 		xa = ya;
 		System.out.println("xa=ya");
 		
-		System.out.println("\n### Testing ya = (Y[])xa ###: ");
-		ya = (Y[])xa;
-		System.out.println("ya=(X[])xa");
+		/*System.out.println("\n### Testing ya = (Y[])xa ###: ");
+		X[] xa2 = new X[5];
+		Y[] ya2 = new Y[5];
+		ya2 = (Y[])xa2;
+		System.out.println("ya=(Y[])xa");*/
+		
+		System.out.println("\n### Testing ya = xa ###: ");
 	}
 }
