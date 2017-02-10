@@ -2,9 +2,10 @@ import java.io.*;
 
 public class Test {
 	public static void main(String[] args){
-		double total = 98000.0*0.15;
+		short total = 9;
 		for(int i = 2; i < 30; i++){
-			total = total*1.08 + 98000*0.15;
+			total = total + 
+			9;
 		}
 		
 		

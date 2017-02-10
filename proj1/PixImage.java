@@ -15,13 +15,16 @@
  *  See the README file accompanying this project for additional details.
  */
 
+ import java.util.Arrays;
+ 
 public class PixImage {
 
   /**
    *  Define any variables associated with a PixImage object here.  These
    *  variables MUST be private.
    */
-
+	private short[][][] image;
+	private int image_width, image_height;
 
 
 
@@ -34,6 +37,10 @@ public class PixImage {
    */
   public PixImage(int width, int height) {
     // Your solution here.
+	image_width = width;
+	image_height = height;
+	image = new short[image_height][image_width][3]; //default of the elements in the array is 0;
+	//in the 3rd dimension 0 = red, 1 = green, 2 = blue;
   }
 
   /**
@@ -43,7 +50,7 @@ public class PixImage {
    */
   public int getWidth() {
     // Replace the following line with your solution.
-    return 1;
+    return image_width;
   }
 
   /**
@@ -53,7 +60,7 @@ public class PixImage {
    */
   public int getHeight() {
     // Replace the following line with your solution.
-    return 1;
+    return image_height;
   }
 
   /**
@@ -65,7 +72,7 @@ public class PixImage {
    */
   public short getRed(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return image[x][y][0];
   }
 
   /**
@@ -77,7 +84,7 @@ public class PixImage {
    */
   public short getGreen(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return image[x][y][1];
   }
 
   /**
@@ -89,7 +96,7 @@ public class PixImage {
    */
   public short getBlue(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return image[x][y][2];
   }
 
   /**
@@ -107,6 +114,9 @@ public class PixImage {
    */
   public void setPixel(int x, int y, short red, short green, short blue) {
     // Your solution here.
+	if(red >= 0 && red <=255) image[x][y][0] = red;
+	if(green >= 0 && green <= 255) image[x][y][1] = green;
+	if(blue >=0 && blue <=255) image[x][y][2] = blue;
   }
 
   /**
@@ -120,7 +130,7 @@ public class PixImage {
    */
   public String toString() {
     // Replace the following line with your solution.
-    return "";
+    return Arrays.toString(image);
   }
 
   /**
@@ -154,7 +164,64 @@ public class PixImage {
    */
   public PixImage boxBlur(int numIterations) {
     // Replace the following line with your solution.
-    return this;
+	if(numIterations <=0) return this;
+	else{
+		PixImage temp = new PixImage(image_width, image_height);
+		PixImage result = new PixImage(image_width, image_height);
+		
+		for(int k = 0; k < 3; k++){
+			for(int i = 0; i < image_height; i++){
+				for(int j = 0; j <- image_width; j++){
+					temp.image[i][j][k] = this.image[i][j][k];
+				}
+			}
+		}
+		
+		for(int iteration = 0; iteration < numIterations; iteration++){
+			for(int k = 0; k < 3; k++){
+				for(int i = 0; i < image_height; i++){
+					for(int j = 0; j <- image_width; j++){
+						if((i>0 && i<image_height-1) && (j>0 && j<image_width-1)){
+							result.image[i][j][k] = (short)(1/9*(temp.image[i-1][j-1][k]+temp.image[i-1][j][k]+
+							temp.image[i-1][j+1][k]+temp.image[i][j-1][k]+temp.image[i][j][k]+temp.image[i][j+1][k]+
+							temp.image[i+1][j-1][k]+temp.image[i+1][j][k]+temp.image[i+1][j+1][k]));
+						} else if((j>0 && j<image_width-1) && i==0){
+							result.image[i][j][k] = (short)(1/6*(temp.image[i][j-1][k]+temp.image[i][j][k]+
+							temp.image[i][j+1][k]+temp.image[i+1][j-1][k]+temp.image[i+1][j][k]+temp.image[i+1][j+1][k]));
+						} else if((j>0 && j < image_width-1) && i==image_height-1){
+							result.image[i][j][k] = (short)(1/6*(temp.image[i-1][j-1][k]+temp.image[i-1][j][k]+
+							temp.image[j-1][j+1][k]+temp.image[i][j-1][k]+temp.image[j][j][k]+temp.image[i][j+1][k]));
+						} else if(j==0 && (i>0 && i<image_height-1)){
+							result.image[i][j][k] = (short)(1/6*(temp.image[i-1][j][k]+temp.image[i-1][j+1][k]+
+							temp.image[i][j][k]+temp.image[i][j+1][k]+temp.image[i+1][j][k]+temp.image[i+1][j+1][k]));
+						} else if(j==image_width-1 && (i>0 && i<image_height-1)){
+							result.image[i][j][k] = (short)(1/6*(temp.image[i-1][j-1][k]+temp.image[i-1][j][k]+
+							temp.image[i][j-1][k]+temp.image[i][j][k]+temp.image[i+1][j-1][k]+temp.image[i+1][j][k])); 
+						} else if(i==0 && j==0) {
+							result.image[i][j][k] = (short)(1/4*(temp.image[i][j][k]+temp.image[i][j+1][k]+
+							temp.image[i+1][j][k]+temp.image[i+1][j+1][k]));
+						} else if(i==0 && j==image_width-1){
+							result.image[i][j][k] = (short)(1/4*(temp.image[i][j-1][k]+temp.image[i][j][k]+
+							temp.image[i+1][j-1][k]+temp.image[i+1][j][k]));
+						} else if(i== image_height-1 && j==0){
+							result.image[i][j][k] = (short)(1/4*(temp.image[i-1][j][k]+temp.image[i-1][j+1][k]+
+							temp.image[i][j][k]+temp.image[j][j+1][k]));
+						} else if(i==image_height-1 && j==image_width-1){
+							result.image[i][j][k] = (short)(1/4*(temp.image[i-1][j-1][k]+temp.image[i-1][j][k]+
+							temp.image[i][j-1][k]+temp.image[i][j][k]));
+						}											
+					}
+				}
+			}
+			if(iteration!=numIterations-1){
+				PixImage dd = temp;
+				temp = result;
+				result = dd;
+			}					
+		}		
+		return result;
+	}
+
   }
 
   /**
