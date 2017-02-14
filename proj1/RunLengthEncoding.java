@@ -29,7 +29,9 @@ public class RunLengthEncoding implements Iterable {
 	 * Define any variables associated with a RunLengthEncoding object here.
 	 * These variables MUST be private.
 	 */
-
+	
+	DList result;
+	int image_width, image_height;
 	/**
 	 * The following methods are required for Part II.
 	 */
@@ -47,6 +49,10 @@ public class RunLengthEncoding implements Iterable {
 
 	public RunLengthEncoding(int width, int height) {
 		// Your solution here.
+		result = new DList();
+		DNode node = new DNode(new Pixel(0,0,0), (width*height));
+		result.insertFront(node);
+		
 	}
 
 	/**
