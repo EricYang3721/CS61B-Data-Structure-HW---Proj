@@ -31,7 +31,7 @@ public class DNode{
 	public Pixel getPixel(){
 		return pix;
 	}
-	public int number(){
+	public int getNumber(){
 		return number;
 	}
 	public DNode getPrev(){

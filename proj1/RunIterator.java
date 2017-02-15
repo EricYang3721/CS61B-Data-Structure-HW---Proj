@@ -36,7 +36,8 @@ public class RunIterator implements Iterator {
 	 * Define any variables associated with a RunIterator object here. These
 	 * variables MUST be private.
 	 */
-
+	private DNode pointer;
+	private DList image;
 	/**
 	 * RunIterator() constructs a new iterator starting with a specified run.
 	 *
@@ -54,8 +55,11 @@ public class RunIterator implements Iterator {
 	// implementation can construct a RunIterator that points to the first run
 	// of
 	// the encoding.
-	RunIterator() {
+	RunIterator(DList lst) {
 		// Your solution here. You may add parameters to the method signature.
+		image = lst;
+		pointer = image.sentinal.prev;
+		
 	}
 
 	/**
@@ -66,7 +70,8 @@ public class RunIterator implements Iterator {
 	 */
 	public boolean hasNext() {
 		// Replace the following line with your solution.
-		return false;
+		
+		return (pointer != image.sentinal);
 	}
 
 	/**
@@ -99,7 +104,12 @@ public class RunIterator implements Iterator {
 		// call to next() will return the subsequent run.
 
 		// Replace the following line with your solution.
-		return new int[4];
+		int[] arr = new int[4];
+		arr[0] = pointer.getNumber();
+		arr[1] = pointer.pix.getR();
+		arr[2] = pointer.pix.getG();
+		arr[3] = pointer.pix.getB();
+		return arr;
 	}
 
 	/**
