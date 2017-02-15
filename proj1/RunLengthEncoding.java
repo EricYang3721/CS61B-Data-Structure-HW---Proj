@@ -185,36 +185,36 @@ public class RunLengthEncoding implements Iterable {
 			for(int i=0; i<image_height;i++){
 				count++;				
 				if(i < image_height-1){
-					if((image.getRed(i,j)!=image.getRed(i+1, j)) | (image.getGreen(i,j)!=image.getGreen(i+1, j)) |
-					(image.getBlue(i,j)!=image.getBlue(i+1,j))){
-						Pixel tempPixel = new Pixel(image.getRed(i,j), image.getGreen(i,j), image.getBlue(i,j));
+					if((image.getRed(j,i)!=image.getRed(j,i+1)) | (image.getGreen(j,i)!=image.getGreen(j,i+1)) |
+					(image.getBlue(j,i+1)!=image.getBlue(j,i+1))){
+						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, count);
 						result.insertEnd(tempNode);
-						//System.out.println(" "+image.getRed(i,j)+" "+image.getGreen(i,j)+" "+image.getBlue(i,j)+", "+count+" |");
+						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 						count = 0;
 					}
 				} else if(i == image_height-1 && j < image_width-1) {
-					if((image.getRed(i,j)!=image.getRed(0,j+1)) | (image.getGreen(i,j)!=image.getGreen(0,j+1)) |
-					(image.getBlue(i,j)!=image.getBlue(0,j+1))){
-						Pixel tempPixel = new Pixel(image.getRed(i,j), image.getGreen(i,j), image.getBlue(i,j));
+					if((image.getRed(j,i)!=image.getRed(j+1,0)) | (image.getGreen(j,i)!=image.getGreen(j+1,0)) |
+					(image.getBlue(j,i)!=image.getBlue(j+1,0))){
+						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j+1,0), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, count);
 						result.insertEnd(tempNode);
-						//System.out.println(" "+image.getRed(i,j)+" "+image.getGreen(i,j)+" "+image.getBlue(i,j)+", "+count+" |");
+						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 						count = 0;
 					}
 				} else {
-					if((image.getRed(i,j)!=image.getRed(0,j-1)) | (image.getGreen(i,j)!=image.getGreen(0,j-1)) |
-					(image.getBlue(i,j)!=image.getBlue(0,j-1))){
-						Pixel tempPixel = new Pixel(image.getRed(i,j), image.getGreen(i,j), image.getBlue(i,j));
+					if((image.getRed(j,i)!=image.getRed(j-1,0)) | (image.getGreen(j,i)!=image.getGreen(j-1,0)) |
+					(image.getBlue(j,i)!=image.getBlue(j-1,0))){
+						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, 1);
 						result.insertEnd(tempNode);
-						//System.out.println(" "+image.getRed(i,j)+" "+image.getGreen(i,j)+" "+image.getBlue(i,j)+", "+count+" |");
+						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 						count = 0;
 					} else {
-						Pixel tempPixel = new Pixel(image.getRed(i,j), image.getGreen(i,j), image.getBlue(i,j));
+						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, count);
 						result.insertEnd(tempNode);
-						//System.out.println(" "+image.getRed(i,j)+" "+image.getGreen(i,j)+" "+image.getBlue(i,j)+", "+count+" |");
+						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 					}
 				}
 				

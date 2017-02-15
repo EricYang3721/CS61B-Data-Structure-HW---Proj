@@ -461,8 +461,8 @@ public class PixImage {
 		System.out.println("Here we go!");
 		PixImage image1 = array2PixImage(new int[][] { { 0, 10, 240 }, { 30, 120, 250 }, { 80, 250, 255 } });
 
-		// System.out.println("image1 is: ");
-		// System.out.println(image1);
+		System.out.println("image1 is: ");
+		System.out.println(image1);
 		System.out.println("Testing getWidth/getHeight on a 3x3 image.  " + "Input image:");
 
 		doTest(image1.getWidth() == 3 && image1.getHeight() == 3, "Incorrect image width and height.");
