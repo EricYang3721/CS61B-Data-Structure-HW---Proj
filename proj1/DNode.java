@@ -40,6 +40,9 @@ public class DNode{
 	public DNode getNext(){
 		return next;
 	}
+	public int getR(){
+		return (int)pix.getR();
+	}
 	
 	public String toString(){
 		return pix + ", time " + number + " | ";

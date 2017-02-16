@@ -58,7 +58,7 @@ public class RunIterator implements Iterator {
 	RunIterator(DList lst) {
 		// Your solution here. You may add parameters to the method signature.
 		image = lst;
-		pointer = image.sentinal.prev;
+		pointer = image.header.next;
 		
 	}
 
@@ -71,7 +71,7 @@ public class RunIterator implements Iterator {
 	public boolean hasNext() {
 		// Replace the following line with your solution.
 		
-		return (pointer != image.sentinal);
+		return (pointer != image.tailer);
 	}
 
 	/**
@@ -106,9 +106,12 @@ public class RunIterator implements Iterator {
 		// Replace the following line with your solution.
 		int[] arr = new int[4];
 		arr[0] = pointer.getNumber();
+		//System.out.println(pointer.toString());
 		arr[1] = pointer.pix.getR();
 		arr[2] = pointer.pix.getG();
 		arr[3] = pointer.pix.getB();
+		
+		if(hasNext()) pointer = pointer.next;
 		return arr;
 	}
 

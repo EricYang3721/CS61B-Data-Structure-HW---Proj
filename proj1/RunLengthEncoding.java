@@ -143,7 +143,24 @@ public class RunLengthEncoding implements Iterable {
 	 */
 	public PixImage toPixImage() {
 		// Replace the following line with your solution.
-		return new PixImage(1, 1);
+		PixImage piximg = new PixImage(image_width, image_height);
+		
+		RunIterator itr2 = new RunIterator(result);
+		int temp_num = 0;
+		int[] temp_n = new int[4];
+		for(int j=0; j<image_width; j++){
+			for(int i=0; i<image_height;i++){				
+				if(temp_num ==0){
+					temp_n = itr2.next();
+					temp_num = temp_n[0];
+				}
+				//System.out.print((short)temp_n[1]+","+(short)temp_n[2]+","+(short)temp_n[3]+",");
+				piximg.setPixel(j, i, (short)temp_n[1], (short)temp_n[2], (short)temp_n[3]);	
+				temp_num--;
+			}
+		}
+		//System.out.println(piximg);
+		return piximg;
 	}
 
 	/**
@@ -157,7 +174,15 @@ public class RunLengthEncoding implements Iterable {
 	 */
 	public String toString() {
 		// Replace the following line with your solution.
-		return "";
+		String repr = "";
+        DNode x = result.header.next;
+        while(x!=result.tailer)
+        {
+            repr = repr + x;
+            x = x.next;
+        }
+        return repr;
+		
 	}
 
 	/**
@@ -190,16 +215,16 @@ public class RunLengthEncoding implements Iterable {
 						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, count);
 						result.insertEnd(tempNode);
-						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
+						//System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 						count = 0;
 					}
 				} else if(i == image_height-1 && j < image_width-1) {
 					if((image.getRed(j,i)!=image.getRed(j+1,0)) | (image.getGreen(j,i)!=image.getGreen(j+1,0)) |
 					(image.getBlue(j,i)!=image.getBlue(j+1,0))){
-						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j+1,0), image.getBlue(j,i));
+						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, count);
 						result.insertEnd(tempNode);
-						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
+						//System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 						count = 0;
 					}
 				} else {
@@ -208,13 +233,13 @@ public class RunLengthEncoding implements Iterable {
 						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, 1);
 						result.insertEnd(tempNode);
-						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
+						//System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 						count = 0;
 					} else {
 						Pixel tempPixel = new Pixel(image.getRed(j,i), image.getGreen(j,i), image.getBlue(j,i));
 						DNode tempNode = new DNode(tempPixel, count);
 						result.insertEnd(tempNode);
-						System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
+						//System.out.println(" "+image.getRed(j,i)+" "+image.getGreen(j,i)+" "+image.getBlue(j,i)+", "+count+" |");
 					}
 				}
 				
@@ -223,7 +248,7 @@ public class RunLengthEncoding implements Iterable {
 			}
 		}
 		
-		
+		//System.out.println(result);
 		check();
 	}
 
@@ -234,6 +259,30 @@ public class RunLengthEncoding implements Iterable {
 	 */
 	public void check() {
 		// Your solution here.
+		int temp_count=0;
+		int[] temp_n = new int[4];
+		int[] prev_n = new int[4];
+		RunIterator itr3 = new RunIterator(result);
+		prev_n = itr3.next();
+		int last_R = prev_n[1];
+		int last_G = prev_n[2];
+		int last_B = prev_n[3];
+		temp_count = prev_n[0];
+		if(result.size<1) System.out.println("Warning: Length of Encoded Image < 1!");
+		else {
+			while(itr3.hasNext()){
+				temp_n = itr3.next();
+				temp_count = temp_count + temp_n[0];
+				if((last_R==temp_n[1])&&(last_G==temp_n[2])&&(last_B==temp_n[3])){
+					System.out.println("Warning: 2 consecutive runs has the same contents!");					
+				}
+				last_R = temp_n[1];
+				last_G = temp_n[2];
+				last_B = temp_n[3];
+			}
+			//System.out.println("total_count:"+temp_count);
+			if(temp_count != image_width*image_height) System.out.println("Warning: List has the wrong size!");
+		}
 	}
 
 	/**
@@ -261,6 +310,17 @@ public class RunLengthEncoding implements Iterable {
 	public void setPixel(int x, int y, short red, short green, short blue) {
 		// Your solution here, but you should probably leave the following line
 		// at the end.
+		
+		PixImage newPixImg = this.toPixImage();
+		newPixImg.setPixel(x, y, red, green, blue);
+		RunLengthEncoding newEncoding = new RunLengthEncoding(newPixImg);
+		this.result = newEncoding.result;
+		
+		//RunLengthEncoding newEncoding = new RunLengthEncoding()
+		//PixImage newPixImg = this.toPixImage();
+		//newPixImg.setPixel(y, x, red, green, blue);
+		//this = new RunLengthEncoding(newPixImg);
+		
 		check();
 	}
 
@@ -344,11 +404,12 @@ public class RunLengthEncoding implements Iterable {
 		rle1.check();
 		System.out.println("Testing getWidth/getHeight on a 3x3 encoding.");
 		doTest(rle1.getWidth() == 3 && rle1.getHeight() == 3, "RLE1 has wrong dimensions");
-
+		//System.out.println(rle1);
+		
 		System.out.println("Testing toPixImage() on a 3x3 encoding.");
 		doTest(image1.equals(rle1.toPixImage()), "image1 -> RLE1 -> image does not reconstruct the original image");
 
-		/*System.out.println("Testing setPixel() on a 3x3 encoding.");
+		System.out.println("Testing setPixel() on a 3x3 encoding_1.");
 		setAndCheckRLE(rle1, 0, 0, 42);
 		image1.setPixel(0, 0, (short) 42, (short) 42, (short) 42);
 		doTest(rle1.toPixImage().equals(image1),
@@ -356,13 +417,16 @@ public class RunLengthEncoding implements Iterable {
 				 * array2PixImage(new int[][] { { 42, 3, 6 }, { 1, 4, 7 }, { 2,
 				 * 5, 8 } })),
 				 */
-		/*		"Setting RLE1[0][0] = 42 fails.");
+				"Setting RLE1[0][0] = 42 fails.");
 
-		System.out.println("Testing setPixel() on a 3x3 encoding.");
+		System.out.println("Testing setPixel() on a 3x3 encoding_2.");
 		setAndCheckRLE(rle1, 1, 0, 42);
 		image1.setPixel(1, 0, (short) 42, (short) 42, (short) 42);
 		doTest(rle1.toPixImage().equals(image1), "Setting RLE1[1][0] = 42 fails.");
-
+		//System.out.println(image1);
+		//System.out.println("rle1");
+		//System.out.println(rle1);
+		
 		System.out.println("Testing setPixel() on a 3x3 encoding.");
 		setAndCheckRLE(rle1, 0, 1, 2);
 		image1.setPixel(0, 1, (short) 2, (short) 2, (short) 2);
@@ -463,6 +527,6 @@ public class RunLengthEncoding implements Iterable {
 		System.out.println("Testing setPixel() on a 3x2 encoding.");
 		setAndCheckRLE(rle4, 1, 0, 1);
 		image4.setPixel(1, 0, (short) 1, (short) 1, (short) 1);
-		doTest(rle4.toPixImage().equals(image4), "Setting RLE4[1][0] = 1 fails.");*/
+		doTest(rle4.toPixImage().equals(image4), "Setting RLE4[1][0] = 1 fails.");
 	}
 }

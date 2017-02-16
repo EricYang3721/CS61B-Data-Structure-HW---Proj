@@ -2,19 +2,14 @@ import java.io.*;
 
 public class Test {
 	public static void main(String[] args){
-		short total = 9;
-		for(int i = 2; i < 30; i++){
-			total = total + 
-			9;
-		}
+		DList lst = new DList;
+		DNode node1 = new DNode();
+		lst.insterFront(node1);
+		DNode node2 = new DNode(new Pixel(1,1,1), 2);
+		lst.insterFront(node2);
+		DNode node3 = new DNode(new Pixel(2,2,2), 3);
+		lst.insertEnd(node3);
+		System.out.println(lst);
 		
-		
-		/*int age=60;
-		while (total > 0){
-			total = (total-100000);
-			age++;
-		}*/
-		//System.out.println(age);
-		System.out.println(total);
 	}
 }
