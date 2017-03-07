@@ -131,7 +131,12 @@ public class BinaryTree implements Dictionary {
 
   private BinaryTreeNode findHelper(Comparable key, BinaryTreeNode node) {
     // Replace the following line with your solution.
-    return null;
+	if(node == null) return null;
+	Comparable nodeKey = (Comparable) node.entry.key();
+	int delta = key.compareTo(nodeKey);	
+	if(delta < 0) return findHelper(key, node.leftChild);
+	else if(delta >0) return findHelper(key, node.rightChild);
+	else return node;
   }
 
   /** 
@@ -147,7 +152,32 @@ public class BinaryTree implements Dictionary {
    **/
   public Entry remove(Object key) {
     // Replace the following line with your solution.
-    return null;
+	
+	BinaryTreeNode foundNode = findHelper((Comparable)key, root);
+	//if(findHelper((Comparable)key, root)) return null;
+	if(foundNode.leftChild==null && foundNode.rightChild==null) foundNode.parent=null;
+	else if(foundNode.leftChild != null && foundNode.rightChild==null){
+		foundNode.leftChild.parent = foundNode.parent;
+		foundNode.parent=null;
+		foundNode.leftChild=null;
+	} else if(foundNode.leftChild==null && foundNode.rightChild!=null){
+		foundNode.rightChild.parent = foundNode.parent;
+		foundNode.parent=null;
+		foundNode.rightChild = null;
+	} else{
+		BinaryTreeNode minNode = foundNode.rightChild;
+		while(minNode.leftChild!=null){
+			minNode = minNode.leftChild;
+		}
+		minNode.parent = foundNode.parent;
+		minNode.leftChild = foundNode.leftChild;
+		minNode.rightChild = foundNode.rightChild;
+		foundNode.parent=null;
+		foundNode.leftChild=null;
+		foundNode.rightChild=null;
+	}		
+	
+    return foundNode.entry;
   }
 
   /**

@@ -2,10 +2,12 @@
 
 import list.*;
 
+
 public class ListSorts {
 
-  private final static int SORTSIZE = 1000;
+  private final static int SORTSIZE = 100;
   //LinkedQuene que;
+  //private LinkedQueue q;
   
   
   /**
@@ -33,7 +35,7 @@ public class ListSorts {
 		}
 
 	
-	System.out.println(qOfQs);
+	//System.out.println(qOfQs);
     return qOfQs;
   }
   
@@ -58,27 +60,39 @@ public class ListSorts {
 		q2 = q1;
 		q1 = temp;
 	}
+	//int q1_num = q1.size();
+	//int q2_num = q2.size();
 	try{
-		Comparator item1 = (Comparator)q1.dequeue();
-		Comparator item2 = (Comparator)q2.dequeue();
-		for(int i=0; i<q1.size(); i++){
-			if(item1.compareTo(item2)<=0 || i>=q2.size()){
-				result.enqueue(item1);
-				item1 = (Comparator)q1.dequeue();
+		
+		while(!q1.isEmpty() && !q2.isEmpty()){
+			Integer q1Comp = new Integer((int)q1.front());
+			Integer q2Comp = new Integer((int)q2.front());
+			if(q1Comp.compareTo(q2Comp)<=0){
+				result.enqueue(q1.dequeue());
 			} else {
-				result.enqueue(item2);
-				item2 = (Comparator)q2.dequeue();
+				result.enqueue(q2.dequeue());
 			}
 		}
+		while(!q1.isEmpty()){
+			result.enqueue(q1.dequeue());
+		}
+		while(!q2.isEmpty()){
+			result.enqueue(q2.dequeue());
+		}		
 			
 	} catch(QueueEmptyException e){
 			System.out.println("Queue is Empty!");			
 		}
 	
-	System.out.println(result);
+	//System.out.println(result);
     return result;
   }
 
+  /*public static int compare(Object obj1, Object obj2){
+	  int p1 = (int) obj1;
+	  int p2 = (int) obj2;
+	  return p1-p2;
+  }*/
 
   /**
    *  partition() partitions qIn using the pivot item.  On completion of
@@ -97,6 +111,17 @@ public class ListSorts {
                                LinkedQueue qSmall, LinkedQueue qEquals, 
                                LinkedQueue qLarge) {
     // Your solution here.
+	try{
+		while(!qIn.isEmpty()){
+			Object item = qIn.dequeue();
+			int temp = pivot.compareTo((Comparable)item);
+			if(temp > 0) qSmall.enqueue(item); 
+			else if(temp == 0) qEquals.enqueue(item);
+			else qLarge.enqueue(item);
+		}
+	} catch(QueueEmptyException e){
+		System.out.println(e);
+	}
   }
 
   /**
@@ -107,11 +132,12 @@ public class ListSorts {
     // Your solution here.
 	int iterations = q.size()-1;
 	LinkedQueue qoq = makeQueueOfQueues(q);
+	
 	//System.out.println(qoq);
 	LinkedQueue q1;
 	LinkedQueue q2;
 	
-	System.out.println(iterations);
+	//System.out.println(iterations);
 	try{
 		while(iterations > 0){
 			q1= (LinkedQueue) qoq.dequeue();
@@ -121,8 +147,11 @@ public class ListSorts {
 			
 			qoq.enqueue(mergedQ);
 			iterations--;
+			
 		}
-		
+		q.append((LinkedQueue) qoq.dequeue());
+		//System.out.println(qoq);
+		//System.out.println(q);
 	} catch(QueueEmptyException e){
 		System.out.println("Merge Sort error");
 	}
@@ -134,6 +163,22 @@ public class ListSorts {
    **/
   public static void quickSort(LinkedQueue q) {
     // Your solution here.
+	if(q.size()<2){
+		return;
+	}
+	int n = (int)Math.random()*q.size();
+	Comparable pivot = (Comparable)q.nth(n);
+	LinkedQueue qSmall = new LinkedQueue();
+	LinkedQueue qEquals = new LinkedQueue();
+	LinkedQueue qLarge = new LinkedQueue();
+	partition(q, pivot, qSmall, qEquals, qLarge);
+	quickSort(qSmall);
+	quickSort(qLarge);
+	q.append(qSmall);
+	q.append(qEquals);
+	q.append(qLarge);
+	
+
   }
 
   /**
@@ -159,14 +204,14 @@ public class ListSorts {
     LinkedQueue q = makeRandom(10);
     System.out.println(q.toString());
     mergeSort(q);
-    //System.out.println(q.toString());
-	/*
+    System.out.println(q.toString());
+	
     q = makeRandom(10);
     System.out.println(q.toString());
     quickSort(q);
-    System.out.println(q.toString());*/
+    System.out.println(q.toString());
 
-    /* Remove these comments for Part III.
+    //Remove these comments for Part III.
     Timer stopWatch = new Timer();
     q = makeRandom(SORTSIZE);
     stopWatch.start();
@@ -182,7 +227,7 @@ public class ListSorts {
     stopWatch.stop();
     System.out.println("Quicksort time, " + SORTSIZE + " Integers:  " +
                        stopWatch.elapsed() + " msec.");
-    */
+    
   }
 
 }
