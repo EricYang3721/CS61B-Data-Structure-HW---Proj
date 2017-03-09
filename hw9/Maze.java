@@ -2,6 +2,7 @@
 
 import java.util.*;
 import set.*;
+import java.io.*;
 
 /**
  *  The Maze class represents a maze in a rectangular grid.  There is exactly
@@ -40,6 +41,7 @@ public class Maze {
 
     horiz = horizontalSize;
     vert = verticalSize;
+	System.out.println("size is: "+horiz + ", "+vert);
     if ((horiz < 1) || (vert < 1) || ((horiz == 1) && (vert == 1))) {
       return;                                    // There are no interior walls
     }
@@ -64,9 +66,62 @@ public class Maze {
         }
       }
     }
-
-
-
+	DisjointSets cells = new DisjointSets(horiz*vert); //all vertice in one array;
+	
+	int[] ran_walls_initial = new int[horiz*(vert-1)+vert*(horiz-1)];
+	for(int l = 0; l< horiz*(vert-1)+vert*(horiz-1);l++){
+		ran_walls_initial[l] = l;               
+	}
+	/*for horizontal wall, 
+	if(ran_walls_initial[i] < hriz*(vert-1), it represents horizontal wall, x = ran_walls_initial[i]%horiz, y = ran_walls_initial/horiz;
+	else if (ran_walls_initial[i] >= hriz*(vert-1)), it represents vertical wall, 
+	x = (ran_walls_initial[i]-horiz*(vert-1))/vert, y = (ran_walls_initial[i] - horiz*(vert-1))%vert;
+	*/
+	
+	int w = (horiz-1)*vert+horiz*(vert-1)-1;  
+	while(w>0){
+		int choose = randInt(w);
+		int temp = ran_walls_initial[w];
+		ran_walls_initial[w] = ran_walls_initial[choose];
+		ran_walls_initial[choose] = temp;
+		w--;
+	}
+	
+	for(int l = 0; l< horiz*(vert-1)+vert*(horiz-1);l++){
+		
+		if(ran_walls_initial[l] <= horiz*(vert-1)-1){
+			//System.out.println("Horizontal: "+ran_walls_initial[l]);
+			int hWall_x = ran_walls_initial[l]%horiz;
+			int hWall_y = ran_walls_initial[l]/horiz;
+			int pointUp = ran_walls_initial[l];
+			int pointDown = ran_walls_initial[l] + horiz;
+			//System.out.println(pointUp);
+			//System.out.println(hWall_x +", "+ hWall_y);
+			if(cells.find(pointUp) != cells.find(pointDown)) {
+				cells.union(cells.find(pointUp), cells.find(pointDown));
+				hWalls[hWall_x][hWall_y] = false;
+			}
+		} else{
+			//System.out.println("vertical: "+ran_walls_initial[l]);
+			int vWall_x = (ran_walls_initial[l]-horiz*(vert-1))/vert;
+			int vWall_y = (ran_walls_initial[l]-horiz*(vert-1))%vert;	
+					
+			int pointLeft = vWall_y*horiz + vWall_x;
+			int pointRight = pointLeft+1;
+			//System.out.println(pointLeft);
+			//System.out.println("Left point: "+pointLeft+"; Right point: "+pointRight);
+			
+			//System.out.println(vWall_x +", "+ vWall_y);
+			if(cells.find(pointLeft) != cells.find(pointRight)) {
+				cells.union(cells.find(pointLeft), cells.find(pointRight));
+				vWalls[vWall_x][vWall_y] = false;	
+			}
+		}
+		
+	}
+	
+	
+	
     /**
      * Fill in the rest of this method.  You should go through all the walls of
      * the maze in random order, and remove any wall whose removal will not
